@@ -29,13 +29,21 @@ INSTALLED_APPS = [
     'category',
     'order',
     'authentication',
-    'supplier'
+    'supplier',
+    'rest_framework_simplejwt.token_blacklist',
+    'rest_framework_simplejwt',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
     ],
+}
+
+REST_AUTH = {
+    'USE_JWT': True,
+    'JWT_AUTH_COOKIE': 'acess_token',
+    'JWT_AUTH_REFRESH_COOKIE': 'refresh_token',
 }
 
 ACCOUNT_EMAIL_VERIFICATION = 'none'

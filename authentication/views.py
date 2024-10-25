@@ -32,55 +32,55 @@ from dj_rest_auth.views import LoginView
 from rest_framework.response import Response
 from dj_rest_auth.registration.views import RegisterView
 from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import get_user_model
 
 class CustomLoginView(LoginView):
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         
+        # Verifica se a autenticação foi bem-sucedida
         if response.status_code == 200:
-            user = self.get_user(request)
-            user_data = {
-                'id': user.id,
-                'username': user.username,
-                'email': user.email,
-                # Adicione outros campos que você deseja retornar
-            }
-            response.data.update({'user': user_data})
+            # Obtém o usuário autenticado
+            user = self.get_user_from_response(response)
+            refresh = RefreshToken.for_user(user)
+            response.data['refresh'] = str(refresh)  # Adiciona o refresh token à resposta
         
         return response
-    
-    def get_user(self, request):
-        return request.user
+
+    def get_user_from_response(self, response):
+        user_id = response.data.get('user', {}).get('pk')
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        return User.objects.get(pk=user_id)
 
 class CustomRegisterView(RegisterView):
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
         
-        if response.status_code == 204:
-            username = request.data.get('username')
-            password = request.data.get('password1')
-            user = authenticate(username=username, password=password)
-            login(request, user)  # Autentica o usuário
-            
-            token, created = Token.objects.get_or_create(user=user)
-            user_data = {
-                'id': user.id,
-                'username': user.username,
-                'email': user.email,
-                # Adicione outros campos que você deseja retornar
-            }
-            return Response({
-                'token': token.key,
-                'user': user_data
-            }, status=201)
+        username = request.data.get('username')
+        password = request.data.get('password1')
+        user = authenticate(username=username, password=password)
+        login(request, user)  # Autentica o usuário
         
-        return Response({}, status=204)
+        token, created = Token.objects.get_or_create(user=user)
+        user_data = {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            # Adicione outros campos que você deseja retornar
+        }
+        return Response({
+            'token': token.key,
+            'user': user_data
+        }, status=201)
+        
     
 class CustomLogoutView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication] 
     def post(self, request, *args, **kwargs):
-        # O usuário já está garantido que é autenticado devido ao permission_classes
+        
         token = Token.objects.filter(user=request.user).first()
         if token:
             token.delete()  # Exclui o token

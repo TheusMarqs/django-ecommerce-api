@@ -76,3 +76,10 @@ class ProductDelete(APIView):
 
     def http_method_not_allowed(self, request, *args, **kwargs):
         return Response({'detail': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+class ProductViewByCode(APIView):
+    def get(self, request, code, *args, **kwargs):
+        return None
+    
+    def http_method_not_allowed(self, request, *args, **kwargs):
+        return Response({'detail': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
