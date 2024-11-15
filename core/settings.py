@@ -20,35 +20,40 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'allauth',
-    'allauth.account',
-    'dj_rest_auth',
-    'allauth.socialaccount',
-    'dj_rest_auth.registration',
     'product',
     'category',
     'order',
     'authentication',
     'supplier',
-    'rest_framework_simplejwt.token_blacklist',
     'rest_framework_simplejwt',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
 
+# REST_AUTH = {
+#     'USE_JWT': True,
+#     'JWT_AUTH_COOKIE': 'acess_token',
+#     'JWT_AUTH_REFRESH_COOKIE': 'refresh_token',
+#     'TOKEN_MODEL': None,
+#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+#     'ROTATE_REFRESH_TOKENS': True, 
+#     'BLACKLIST_AFTER_ROTATION': True,
+# }
+
 REST_AUTH = {
-    'USE_JWT': True,
-    'JWT_AUTH_COOKIE': 'acess_token',
-    'JWT_AUTH_REFRESH_COOKIE': 'refresh_token',
     'TOKEN_MODEL': None,
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': True, 
-    'BLACKLIST_AFTER_ROTATION': True,
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
 
 ACCOUNT_EMAIL_VERIFICATION = 'none'
@@ -63,15 +68,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "allauth.account.middleware.AccountMiddleware",
 ]
 
-AUTHENTICATION_BACKENDS = [
-    # allauth specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
-    # Needed to login by username in Django admin, regardless of allauth
-    'django.contrib.auth.backends.ModelBackend',
-]
 
 ROOT_URLCONF = 'core.urls'
 

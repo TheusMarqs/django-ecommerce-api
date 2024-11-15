@@ -5,8 +5,10 @@ from rest_framework import status
 from .models import Order
 from .serializers import OrderSerializer
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
 
 class OrderCreate(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         serializer = OrderSerializer(data=request.data)
 
@@ -21,6 +23,7 @@ class OrderCreate(APIView):
         },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
         
 class OrderView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
         orders = Order.objects.all()
         serializer = OrderSerializer(orders, many=True)
@@ -32,6 +35,7 @@ class OrderView(APIView):
         },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
 class OrderViewById(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, pk, *args, **kwargs):
         try:
             order = Order.objects.get(pk=pk)
@@ -46,6 +50,7 @@ class OrderViewById(APIView):
         },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
 class OrderUpdate(APIView):
+    permission_classes = [IsAuthenticated]
     def put(self, request, pk, *args, **kwargs):
         try:
             order = Order.objects.get(pk=pk)
@@ -66,6 +71,7 @@ class OrderUpdate(APIView):
         },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
         
 class OrderDelete(APIView):
+    permission_classes = [IsAuthenticated]
     def delete(self, request, pk, *args, **kwargs):
         try:
             order = Order.objects.get(pk=pk)

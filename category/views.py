@@ -5,8 +5,10 @@ from rest_framework import status
 from .models import Category
 from .serializers import CategorySerializer
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
 
 class CategoryCreate(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         serializer = CategorySerializer(data=request.data)
 
@@ -21,6 +23,7 @@ class CategoryCreate(APIView):
         },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
         
 class CategoryView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
         categories = Category.objects.all()
         serializer = CategorySerializer(categories, many=True)
@@ -32,6 +35,7 @@ class CategoryView(APIView):
         },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
 class CategoryViewById(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, pk, *args, **kwargs):
         try:
             category = Category.objects.get(pk=pk)
@@ -46,6 +50,7 @@ class CategoryViewById(APIView):
         },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
 class CategoryUpdate(APIView):
+    permission_classes = [IsAuthenticated]
     def put(self, request, pk, *args, **kwargs):
         try:
             category = Category.objects.get(pk=pk)
@@ -66,6 +71,7 @@ class CategoryUpdate(APIView):
         },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
         
 class CategoryDelete(APIView):
+    permission_classes = [IsAuthenticated]
     def delete(self, request, pk, *args, **kwargs):
         try:
             category = Category.objects.get(pk=pk)

@@ -5,8 +5,11 @@ from rest_framework import status
 from .models import Product
 from .serializers import ProductSerializer
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import JSONParser
 
 class ProductCreate(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         serializer = ProductSerializer(data=request.data)
 
@@ -21,6 +24,7 @@ class ProductCreate(APIView):
         },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 class ProductView(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
@@ -32,6 +36,7 @@ class ProductView(APIView):
         },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
 class ProductViewById(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, pk, *args, **kwargs):
         try:
             product = Product.objects.get(pk=pk)
@@ -46,6 +51,7 @@ class ProductViewById(APIView):
         },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
 class ProductUpdate(APIView):
+    permission_classes = [IsAuthenticated]
     def put(self, request, pk, *args, **kwargs):
         try:
             product = Product.objects.get(pk=pk)
@@ -66,6 +72,7 @@ class ProductUpdate(APIView):
         },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
         
 class ProductDelete(APIView):
+    permission_classes = [IsAuthenticated]
     def delete(self, request, pk, *args, **kwargs):
         try:
             product = Product.objects.get(pk=pk)
@@ -78,8 +85,27 @@ class ProductDelete(APIView):
         return Response({'detail': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
 class ProductViewByCode(APIView):
-    def get(self, request, code, *args, **kwargs):
-        return None
+    permission_classes = [IsAuthenticated]
+    def get(self, request, *args, **kwargs):
+        data = JSONParser().parse(request)
+        
+        try:
+            type = data['type']
+            code = data['code']
+            
+            
+            if type == 'qr':
+                product = Product.objects.get(qr_code=code)
+            elif type == 'bar':
+                product = Product.objects.get(bar_code=code)
+                
+            else:
+                return Response({'Error': 'Invalid type'})
+            
+        except Product.DoesNotExist:
+            return Response({'Error': 'Product with code ' + code + ' does not exist'})
+        
+        return Response({'Product': product})
     
     def http_method_not_allowed(self, request, *args, **kwargs):
         return Response({'detail': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

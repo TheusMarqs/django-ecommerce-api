@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 
 class SupplierCreate(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
         serializer = SupplierSerializer(data=request.data)
 
@@ -37,6 +38,7 @@ class SupplierView(APIView):
         },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
 class SupplierViewById(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, pk, *args, **kwargs):
         try:
             supplier = Supplier.objects.get(pk=pk)
@@ -51,6 +53,7 @@ class SupplierViewById(APIView):
         },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
 class SupplierUpdate(APIView):
+    permission_classes = [IsAuthenticated]
     def put(self, request, pk, *args, **kwargs):
         try:
             supplier = Supplier.objects.get(pk=pk)
@@ -71,6 +74,7 @@ class SupplierUpdate(APIView):
         },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
         
 class SupplierDelete(APIView):
+    permission_classes = [IsAuthenticated]
     def delete(self, request, pk, *args, **kwargs):
         try:
             supplier = Supplier.objects.get(pk=pk)
