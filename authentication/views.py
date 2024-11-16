@@ -42,6 +42,56 @@ class UserRegister(APIView):
                 'email': user.email
             }, status=status.HTTP_201_CREATED)
             
+            # response.set_cookie(
+            #     key='refresh_token',
+            #     value=str(refresh),
+            #     httponly=False,
+            #     secure=False,
+            #     samesite='Strict',
+            # )
+            
+            # response.set_cookie(
+            #     key='access_token',
+            #     value=access_token,
+            #     secure=False,
+            #     httponly=True,  # Impede acesso via JavaScript
+            #     # secure=True,  # Apenas via HTTPS
+            #     samesite='Strict',  # Evita CSRF em outros sites
+            #     max_age=3600,  # Tempo de expiração (1 hora)
+            # )
+            
+            # response.set_cookie(
+            #     key='username',
+            #     value=user.username,
+            #     secure=False,
+            #     httponly=True, 
+            #     # secure=True,
+            #     samesite='Strict',
+            #     max_age=3600,
+            # )
+            
+            # response.set_cookie(
+            #     key='email',
+            #     value=user.email,
+            #     httponly=True, 
+            #     # secure=True,
+            #     secure=False,
+            #     samesite='Strict',
+            #     max_age=3600,
+            # )
+            
+            # response.set_cookie(
+            #     key='id',
+            #     value=user.id,
+            #     httponly=True, 
+            #     # secure=True,
+            #     # samesite='Strict',
+            #     secure=False,
+            #     samesite='Strict',
+            #     max_age=3600,
+            # )
+            
+            
         except Exception as e:
             return Response({'error': 'Erro desconhecido: ' + str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             

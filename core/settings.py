@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'authentication',
     'supplier',
     'rest_framework_simplejwt',
+    'corsheaders'
 ]
 
 REST_FRAMEWORK = {
@@ -52,8 +53,8 @@ REST_AUTH = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
 ACCOUNT_EMAIL_VERIFICATION = 'none'
@@ -63,12 +64,20 @@ SITE_ID = 1
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8081",
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 
 ROOT_URLCONF = 'core.urls'
@@ -88,6 +97,9 @@ TEMPLATES = [
         },
     },
 ]
+
+SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds
+SESSION_COOKIE_SECURE = True   # Use secure cookies (HTTPS)
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
