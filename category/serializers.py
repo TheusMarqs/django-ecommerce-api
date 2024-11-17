@@ -4,7 +4,7 @@ from .models import Category
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['name', 'description']
+        fields = ['id','name', 'description']
         
     def to_internal_value(self, data):
         valid_fields = set(self.fields.keys())

@@ -4,7 +4,7 @@ from .models import Product
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'price', 'stock', 'bar_code', 'qr_code', 'category']
+        fields = ['id','name', 'description', 'price', 'stock', 'bar_code', 'qr_code', 'category']
 
     def to_internal_value(self, data):
         valid_fields = set(self.fields.keys())
