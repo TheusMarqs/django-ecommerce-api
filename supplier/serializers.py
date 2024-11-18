@@ -4,7 +4,7 @@ from .models import Supplier
 class SupplierSerializer(serializers.ModelSerializer):
     class Meta:
         model = Supplier
-        fields = ['name', 'email', 'phone']
+        fields = ['id','name', 'email', 'phone']
         
     def to_internal_value(self, data):
         valid_fields = set(self.fields.keys())

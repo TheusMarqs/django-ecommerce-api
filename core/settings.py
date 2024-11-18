@@ -1,6 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
-
+import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-k*qi*odgm#)@7=gh97o0gy(tr_*$%)i8(_&cs86cl+(i9wpe2p'
@@ -26,7 +26,8 @@ INSTALLED_APPS = [
     'authentication',
     'supplier',
     'rest_framework_simplejwt',
-    'corsheaders'
+    'corsheaders',
+    'cart'
 ]
 
 REST_FRAMEWORK = {
@@ -46,16 +47,20 @@ REST_FRAMEWORK = {
 #     'BLACKLIST_AFTER_ROTATION': True,
 # }
 
-REST_AUTH = {
-    'TOKEN_MODEL': None,
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-}
+# REST_AUTH = {
+#     'TOKEN_MODEL': None,
+#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+# }
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 

@@ -6,7 +6,7 @@ class OrderSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Order
-        fields = ['client', 'date', 'total']
+        fields = ['id','client', 'date', 'total']
         
     def to_internal_value(self, data):
         valid_fields = set(self.fields.keys())
