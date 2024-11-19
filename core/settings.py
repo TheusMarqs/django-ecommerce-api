@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'supplier',
     'rest_framework_simplejwt',
     'corsheaders',
-    'cart'
+    'cart',
+    
 ]
 
 REST_FRAMEWORK = {
