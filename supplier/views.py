@@ -25,7 +25,6 @@ class SupplierCreate(APIView):
         
 class SupplierView(APIView):
     permission_classes = [IsAuthenticated]
-    # authentication_classes = [TokenAuthentication]
 
     def get(self, request, *args, **kwargs):
         suppliers = Supplier.objects.all()
