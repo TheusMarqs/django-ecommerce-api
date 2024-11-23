@@ -33,7 +33,7 @@ class OrderView(APIView):
         return Response({
             'detail': 'Method not allowed'
         },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
+        
 class OrderViewById(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, pk, *args, **kwargs):
@@ -42,6 +42,21 @@ class OrderViewById(APIView):
         except Order.DoesNotExist:
             return Response({'detail': 'Order not found.'})
         serializer = OrderSerializer(order)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def http_method_not_allowed(self, request, *args, **kwargs):
+        return Response({
+            'detail': 'Method not allowed'
+        },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+class OrderViewByClientId(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            orders = Order.objects.filter(client=pk)
+        except Order.DoesNotExist:
+            return Response({'detail': 'Order not found.'})
+        serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def http_method_not_allowed(self, request, *args, **kwargs):
