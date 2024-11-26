@@ -29,18 +29,18 @@ INSTALLED_APPS = [
     'corsheaders',
     'cart',
     'channels',
-    'chat'
+    # 'chat'
     
 ]
 
-ASGI_APPLICATION = "core.asgi.application"
+# ASGI_APPLICATION = "core.asgi.application"
 
-# Adicionar backend para WebSockets
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",  # Para desenvolvimento; use Redis em produção
-    },
-}
+# # Adicionar backend para WebSockets
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels.layers.InMemoryChannelLayer",
+#     },
+# }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -123,10 +123,23 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'pmpostgres',
+        'USER': 'pmuser',
+        'PASSWORD': 'e0bAZ0z1ODgDdvqktKbTzyDtdW0JWg8y',
+        'HOST': 'dpg-ct2tbuaj1k6c73b0o5og-a.virginia-postgres.render.com',
+        'PORT': '5432',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
