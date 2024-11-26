@@ -16,3 +16,6 @@ six==1.16.0
 sqlparse==0.5.1
 tzdata==2024.2
 urllib3==2.2.3
+channels==4.2.0
+gunicorn==22.0.0
+daphne==4.1.2

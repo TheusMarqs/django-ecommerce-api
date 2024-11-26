@@ -28,8 +28,19 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'cart',
+    'channels',
+    'chat'
     
 ]
+
+ASGI_APPLICATION = "core.asgi.application"
+
+# Adicionar backend para WebSockets
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  # Para desenvolvimento; use Redis em produção
+    },
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

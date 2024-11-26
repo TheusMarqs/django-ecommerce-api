@@ -10,7 +10,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.exceptions import InvalidToken
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
-
 from authentication.models import BlacklistedToken
 
 class UserRegister(APIView):
