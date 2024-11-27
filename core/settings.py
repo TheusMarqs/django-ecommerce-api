@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     
 ]
 
-# ASGI_APPLICATION = "core.asgi.application"
+ASGI_APPLICATION = "core.asgi.application"
 
 # # Adicionar backend para WebSockets
 # CHANNEL_LAYERS = {
