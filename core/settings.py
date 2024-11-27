@@ -28,7 +28,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'cart',
     'channels',
-    # 'chat'
+    'chat'
     
 ]
 
@@ -40,6 +40,16 @@ INSTALLED_APPS = [
 #         "BACKEND": "channels.layers.InMemoryChannelLayer",
 #     },
 # }
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': ['redis://red-ct301al2ng1s73ee57r0:6379'],
+        },
+    },
+}
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
