@@ -1,6 +1,15 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 
+import redis
+
+# Conexão com o Redis (ajuste o host conforme necessário)
+redis_instance = redis.StrictRedis(
+    host='red-ct301al2ng1s73ee57r0',
+    port=6379,
+    decode_responses=True
+)
+
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -13,6 +22,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
         await self.accept()
+        
+        # Recuperar mensagens antigas do Redis
+        messages = redis_instance.lrange(self.room_group_name, 0, -1)
+        for message in messages:
+            decoded_message = json.loads(message)
+            await self.send(text_data=json.dumps({
+                'message': decoded_message['message'],
+                'sender': decoded_message['sender'],
+            }))
 
     async def disconnect(self, close_code):
         # Remover o canal do grupo
@@ -26,6 +44,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         message = data['message']
         sender = data['sender']
+        
+        # Salvar a mensagem no Redis
+        redis_instance.rpush(self.room_group_name, json.dumps({'sender': sender, 'message': message}))
 
         # Enviar a mensagem para o grupo
         await self.channel_layer.group_send(
