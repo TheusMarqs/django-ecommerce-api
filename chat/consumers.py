@@ -45,11 +45,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-        # Verificar se não há mais canais no grupo
-        group_channels = await self.channel_layer.group_channels(self.room_group_name)
-        if not group_channels:  # Se não há mais conexões, remova a sala do Redis
-            redis_conn = get_redis_connection()
-            redis_conn.srem('available_chats', self.room_group_name)
+        # Remover o chat do Redis se não houver mais usuários conectados
+        redis_conn = get_redis_connection()
+        # A verificação de canais não é mais necessária no Redis diretamente
+        # Em vez disso, você pode manter um contador de usuários ou outra lógica
+        # para limpar a sala do Redis quando não houver mais participantes.
 
     async def receive(self, text_data):
         # Receber a mensagem do cliente WebSocket
