@@ -1,14 +1,19 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-
 import redis
 
-# Conexão com o Redis (ajuste o host conforme necessário)
-redis_instance = redis.StrictRedis(
-    host='red-ct301al2ng1s73ee57r0',
-    port=6379,
-    decode_responses=True
-)
+# Singleton para a conexão Redis
+redis_instance = None
+
+def get_redis_connection():
+    global redis_instance
+    if redis_instance is None:
+        redis_instance = redis.StrictRedis(
+            host='red-ct301al2ng1s73ee57r0',
+            port=6379,
+            decode_responses=True
+        )
+    return redis_instance
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -16,7 +21,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_group_name = f'chat_{self.room_name}'
 
         # Adicionar o chat ao conjunto de chats no Redis
-        redis_instance.sadd('available_chats', self.room_group_name)
+        redis_conn = get_redis_connection()
+        redis_conn.sadd('available_chats', self.room_group_name)
 
         # Adicionar o canal ao grupo
         await self.channel_layer.group_add(
@@ -27,7 +33,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.accept()
         
         # Recuperar mensagens antigas do Redis
-        messages = redis_instance.lrange(self.room_group_name, 0, -1)
+        messages = redis_conn.lrange(self.room_group_name, 0, -1)
         for message in messages:
             decoded_message = json.loads(message)
             await self.send(text_data=json.dumps({
@@ -42,9 +48,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         
+        # Verificar se não há mais canais no grupo
         group_channels = await self.channel_layer.group_channels(self.room_group_name)
         if not group_channels:  # Se não há mais conexões, remova a sala do Redis
-            redis_instance.srem('available_chats', self.room_group_name)
+            redis_conn = get_redis_connection()
+            redis_conn.srem('available_chats', self.room_group_name)
 
     async def receive(self, text_data):
         # Receber a mensagem do cliente WebSocket
@@ -53,7 +61,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         sender = data['sender']
         
         # Salvar a mensagem no Redis
-        redis_instance.rpush(self.room_group_name, json.dumps({'sender': sender, 'message': message}))
+        redis_conn = get_redis_connection()
+        redis_conn.rpush(self.room_group_name, json.dumps({'sender': sender, 'message': message}))
 
         # Enviar a mensagem para o grupo
         await self.channel_layer.group_send(
@@ -74,5 +83,3 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'message': message,
             'sender': sender,
         }))
-
-
