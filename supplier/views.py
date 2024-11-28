@@ -11,6 +11,12 @@ from rest_framework.authentication import TokenAuthentication
 class SupplierCreate(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return Response(
+                {'detail': 'You do not have permission to perform this action.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+            
         serializer = SupplierSerializer(data=request.data)
 
         if serializer.is_valid():
@@ -27,6 +33,12 @@ class SupplierView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return Response(
+                {'detail': 'You do not have permission to perform this action.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+            
         suppliers = Supplier.objects.all()
         serializer = SupplierSerializer(suppliers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -39,6 +51,12 @@ class SupplierView(APIView):
 class SupplierViewById(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, pk, *args, **kwargs):
+        if not request.user.is_superuser:
+            return Response(
+                {'detail': 'You do not have permission to perform this action.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+            
         try:
             supplier = Supplier.objects.get(pk=pk)
         except Supplier.DoesNotExist:
@@ -54,6 +72,12 @@ class SupplierViewById(APIView):
 class SupplierUpdate(APIView):
     permission_classes = [IsAuthenticated]
     def put(self, request, pk, *args, **kwargs):
+        if not request.user.is_superuser:
+            return Response(
+                {'detail': 'You do not have permission to perform this action.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+            
         try:
             supplier = Supplier.objects.get(pk=pk)
         except Supplier.DoesNotExist:
@@ -75,6 +99,12 @@ class SupplierUpdate(APIView):
 class SupplierDelete(APIView):
     permission_classes = [IsAuthenticated]
     def delete(self, request, pk, *args, **kwargs):
+        if not request.user.is_superuser:
+            return Response(
+                {'detail': 'You do not have permission to perform this action.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+            
         try:
             supplier = Supplier.objects.get(pk=pk)
             supplier.delete()

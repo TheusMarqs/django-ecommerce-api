@@ -21,6 +21,12 @@ class ViewChats(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return Response(
+                {'detail': 'You do not have permission to perform this action.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+            
         redis_conn = get_redis_connection()
         chat_keys = redis_conn.smembers('available_chats')
         chat_names = [key.replace('chat_', '') for key in chat_keys]
@@ -35,6 +41,12 @@ class DeleteChat(APIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, roomName, *args, **kwargs):
+        if not request.user.is_superuser:
+            return Response(
+                {'detail': 'You do not have permission to perform this action.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+            
         redis_conn = get_redis_connection()
         room_group_name = f'chat_{roomName}'
 

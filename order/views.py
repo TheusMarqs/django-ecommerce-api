@@ -25,6 +25,12 @@ class OrderCreate(APIView):
 class OrderView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return Response(
+                {'detail': 'You do not have permission to perform this action.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+            
         orders = Order.objects.all()
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -67,6 +73,12 @@ class OrderViewByClientId(APIView):
 class OrderUpdate(APIView):
     permission_classes = [IsAuthenticated]
     def put(self, request, pk, *args, **kwargs):
+        if not request.user.is_superuser:
+            return Response(
+                {'detail': 'You do not have permission to perform this action.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+            
         try:
             order = Order.objects.get(pk=pk)
         except Order.DoesNotExist:
@@ -88,6 +100,12 @@ class OrderUpdate(APIView):
 class OrderDelete(APIView):
     permission_classes = [IsAuthenticated]
     def delete(self, request, pk, *args, **kwargs):
+        if not request.user.is_superuser:
+            return Response(
+                {'detail': 'You do not have permission to perform this action.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+            
         try:
             order = Order.objects.get(pk=pk)
             order.delete()

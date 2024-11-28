@@ -11,6 +11,12 @@ from rest_framework.parsers import JSONParser
 class ProductCreate(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return Response(
+                {'detail': 'You do not have permission to perform this action.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+            
         serializer = ProductSerializer(data=request.data)
 
         if serializer.is_valid():
@@ -53,6 +59,12 @@ class ProductViewById(APIView):
 class ProductUpdate(APIView):
     permission_classes = [IsAuthenticated]
     def put(self, request, pk, *args, **kwargs):
+        if not request.user.is_superuser:
+            return Response(
+                {'detail': 'You do not have permission to perform this action.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+            
         try:
             product = Product.objects.get(pk=pk)
         except Product.DoesNotExist:
@@ -74,6 +86,12 @@ class ProductUpdate(APIView):
 class ProductDelete(APIView):
     permission_classes = [IsAuthenticated]
     def delete(self, request, pk, *args, **kwargs):
+        if not request.user.is_superuser:
+            return Response(
+                {'detail': 'You do not have permission to perform this action.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+            
         try:
             product = Product.objects.get(pk=pk)
             product.delete()
