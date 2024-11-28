@@ -41,6 +41,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+        
+        group_channels = await self.channel_layer.group_channels(self.room_group_name)
+        if not group_channels:  # Se não há mais conexões, remova a sala do Redis
+            redis_instance.srem('available_chats', self.room_group_name)
 
     async def receive(self, text_data):
         # Receber a mensagem do cliente WebSocket
