@@ -23,3 +23,18 @@ class ViewChats(APIView):
             'detail': 'Method not allowed'
         },  status=status.HTTP_405_METHOD_NOT_ALLOWED)
         
+class DeleteChat(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def delete(self, request, roomName, *args, **kwargs):
+        
+        room_group_name = f'chat_{roomName}'
+
+    # Remover o chat do conjunto de chats disponíveis
+    if redis_instance.sismember("available_chats", room_group_name):
+        redis_instance.srem("available_chats", room_group_name)
+        redis_instance.delete(room_group_name)  # Remove as mensagens armazenadas
+        return JsonResponse({"success": f"Chat {roomName} deleted."})
+    else:
+        return JsonResponse({"error": f"Chat {roomName} not found."}, status=404)
+        

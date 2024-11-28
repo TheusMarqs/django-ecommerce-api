@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import TokenVerifyView, TokenRefreshView
 from django.conf.urls.static import static
 from django.conf import settings
 from authentication.views import CustomTokenRefreshView
-from chat.views import ViewChats
+from chat.views import ViewChats, DeleteChat
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -17,5 +17,6 @@ urlpatterns = [
     path('token/verify', TokenVerifyView.as_view()),
     path('token/refresh', CustomTokenRefreshView.as_view()),
     path('ws/chats', ViewChats.as_view()),
+    path('ws/delete/<str:roomName>', DeleteChat.as_view()),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
