@@ -20,13 +20,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'
 
-        # Verificar se o chat já existe no Redis (verificando se o canal já foi adicionado)
-        redis_conn = get_redis_connection()
-        if not redis_conn.sismember('available_chats', self.room_group_name):
-            # Adicionar o chat ao conjunto de chats no Redis quando a primeira mensagem for recebida
-            redis_conn.sadd('available_chats', self.room_group_name)
-
-        # Adicionar o canal ao grupo
+        # Adicionar o canal ao grupo imediatamente após a conexão
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
@@ -34,7 +28,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         await self.accept()
 
-        # Recuperar mensagens antigas do Redis
+        # Recuperar mensagens antigas do Redis, se existirem
+        redis_conn = get_redis_connection()
         messages = redis_conn.lrange(self.room_group_name, 0, -1)
         for message in messages:
             decoded_message = json.loads(message)
@@ -62,8 +57,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = data['message']
         sender = data['sender']
 
-        # Salvar a mensagem no Redis
+        # Adicionar o chat ao conjunto de chats no Redis quando a primeira mensagem for recebida
         redis_conn = get_redis_connection()
+        if not redis_conn.sismember('available_chats', self.room_group_name):
+            redis_conn.sadd('available_chats', self.room_group_name)
+
+        # Salvar a mensagem no Redis
         redis_conn.rpush(self.room_group_name, json.dumps({'sender': sender, 'message': message}))
 
         # Enviar a mensagem para o grupo
