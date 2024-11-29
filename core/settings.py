@@ -64,23 +64,6 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 
-# REST_AUTH = {
-#     'USE_JWT': True,
-#     'JWT_AUTH_COOKIE': 'acess_token',
-#     'JWT_AUTH_REFRESH_COOKIE': 'refresh_token',
-#     'TOKEN_MODEL': None,
-#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
-#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-#     'ROTATE_REFRESH_TOKENS': True, 
-#     'BLACKLIST_AFTER_ROTATION': True,
-# }
-
-# REST_AUTH = {
-#     'TOKEN_MODEL': None,
-#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-#     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-# }
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),

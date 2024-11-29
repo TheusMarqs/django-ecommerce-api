@@ -8,7 +8,6 @@ from .models import Cart, CartItem
 from .serializers import CartSerializer
 from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth.models import User
 
         
 class CartView(APIView):

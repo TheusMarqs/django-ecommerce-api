@@ -2,7 +2,7 @@ from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from datetime import datetime
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager, Group, Permission
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, Group, Permission
 from django.utils import timezone
 from django.contrib.auth.base_user import BaseUserManager
 
@@ -55,7 +55,14 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(blank=True, default='', unique=True)
-    name = models.CharField(max_length=255, blank=True, default='')
+    name = models.CharField(max_length=255, blank=True, default='', unique=True)
+    
+    neighbourhood = models.CharField(max_length=255, blank=True, default='')
+    street = models.CharField(max_length=255, blank=True, default='')
+    city = models.CharField(max_length=255, blank=True, default='')
+    cep = models.CharField(max_length=10, blank=True, default='')
+    number = models.CharField(max_length=10, blank=True, default='')
+    complement = models.CharField(max_length=255, blank=True, default='')
 
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
