@@ -9,6 +9,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# AUTH_USER_MODEL = 'authentication.User'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -56,6 +58,11 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://backend-pm.onrender.com"
+]
+
 
 # REST_AUTH = {
 #     'USE_JWT': True,
