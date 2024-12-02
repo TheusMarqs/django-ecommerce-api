@@ -116,8 +116,10 @@ class ProductViewByCode(APIView):
             
             if type == 'qr':
                 product = Product.objects.get(qr_code=code)
+                
             elif type == 'bar':
                 product = Product.objects.get(bar_code=code)
+            
                 
             else:
                 return Response({'Error': 'Invalid type'})
@@ -125,7 +127,9 @@ class ProductViewByCode(APIView):
         except Product.DoesNotExist:
             return Response({'Error': 'Product with code ' + code + ' does not exist'})
         
-        return Response({'Product': product.serialize()}, status=status.HTTP_200_OK)
+        serializer = ProductSerializer(product)
+        
+        return Response({'Product': serializer.data}, status=status.HTTP_200_OK)
     
     def http_method_not_allowed(self, request, *args, **kwargs):
         return Response({'detail': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
