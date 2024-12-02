@@ -125,7 +125,7 @@ class ProductViewByCode(APIView):
         except Product.DoesNotExist:
             return Response({'Error': 'Product with code ' + code + ' does not exist'})
         
-        return Response({'Product': product})
+        return Response({'Product': product.serialize()}, status=status.HTTP_200_OK)
     
     def http_method_not_allowed(self, request, *args, **kwargs):
         return Response({'detail': 'Method not allowed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
