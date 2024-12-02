@@ -105,12 +105,14 @@ class ProductDelete(APIView):
 class ProductViewByCode(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
-        data = JSONParser().parse(request)
+        
+        type = request.query_params.get('type')
+        code = request.query_params.get('code')
+        
+        if not type or not code:
+            return Response({'Error': 'Both type and code are required'}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
-            type = data['type']
-            code = data['code']
-            
             
             if type == 'qr':
                 product = Product.objects.get(qr_code=code)
